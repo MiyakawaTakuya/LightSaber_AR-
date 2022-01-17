@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!--media pipe: 手の骨格取得や認識結果の描画に使用-->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <!--opencv.js: 手の傾きや中心位置を計算するために使用-->
+    <script src="https://docs.opencv.org/3.4.1/opencv.js"></script>
+
+    <!--MediaPipeやOpenCVでの処理を記述-->
+    <script type="text/javascript">
+        let canvasElement;
+        let canvasCtx;
+        //初期化
+        window.onload = function () {
+            //ビデオ要素の取得
+            let videoElement = document.getElementById('input_video');
+            //表示用のCanvasを取得
+            canvasElement = document.getElementById('output_canvas');
+            //Canvas描画に関する情報にアクセス
+            canvasCtx = canvasElement.getContext('2d');
+            //HandTrackingを使用するための関連ファイルの取得と初期化
+            const hands = new Hands({
+                locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+                }
+            });
+            //手の認識に関するオプション
+            hands.setOptions({
+                maxNumHands: 2, //認識可能な手の最大数
+                modelComplexity: 1,//精度に関する設定(0~1)
+                minDetectionConfidence: 0.5,//手検出の信頼度
+                minTrackingConfidence: 0.5,//手追跡の信頼度
+                useCpuInference: false, //M1 MacのSafariの場合は1
+            });
+            //結果を処理する関数を登録
+            hands.onResults(recvResults);
+            //カメラの初期化
+            const camera = new Camera(videoElement, {
+                onFrame: async () => {
+                    //カメラの画像を用いて手の検出を実行
+                    await hands.send({ image: videoElement });
+                },
+                width: 1280, height: 720
+            });
+            //カメラの動作開始
+            camera.start();
+        };
+        //手の検出結果を利用する
+        function recvResults(results) {
+
+        }
+    </script>
+</head>
+
+<!-- 描画領域 -->
+
+<body>
+    <!-- Webカメラの映像を取得(不可視に設定) -->
+    <video id="input_video" style="position:absolute; display:none;"></video>
+    <!-- ライトセーバー的な画像(不可視に設定) -->
+    <img id="beam" src="画像のURL" style="position:absolute; display:none;">
+    <!-- カメラ画像とての認証結果を合成して表示 -->
+    <canvas id="output_canvas" style="position:absolute;"></canvas>
+</body>
+
+</html>
