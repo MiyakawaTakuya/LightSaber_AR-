@@ -1,0 +1,26 @@
+{
+  "dev": "node index.js",
+  "build": "next build",
+  "heroku-postbuild": "npm run-script build",
+  "start": "next start -p 8080",
+  "name": "220123lightsaber_ar",
+  "description": "MediaPipeとOpenCVを用いたWebARコンテンツの作成",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiyakawaTakuya/LightSaber_AR-.git"
+  },
+  "keywords": [
+    "ar"
+  ],
+  "author": "takuya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MiyakawaTakuya/LightSaber_AR-/issues"
+  },
+  "homepage": "https://github.com/MiyakawaTakuya/LightSaber_AR-#readme"
+}
