@@ -17,7 +17,7 @@ app.get("/", function (req, res) {
 
 });
 app.use(express.static('public'));
-
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 // process.env.PORTはdynamic portとしての機能
 app.listen(process.env.PORT || 3000, function () {
     console.log("The server is runnning on port 3000.");
