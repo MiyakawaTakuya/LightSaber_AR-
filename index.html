@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<!-- ライトセイバーの最低限実装 -->
 
 <head>
     <meta charset="utf-8">
@@ -19,6 +18,18 @@
         let beam; //ライトセーバー的案画像
         let ell; //手の位置や傾きを楕円
         let ratio;  //親指の立ち具合を
+        let isStandingThumb = false;  //親指が立ち上がっているかどうかのフラグ
+        // let posThubs = [0, 0];  //[x座標, y座標]といったように格納していく
+        let thumbPos_x = 0;
+        let thumbPos_y = 0;
+        let count = 0;
+        const SE_wake = new Audio('./assets/wake.mp3');
+        const SE_left = new Audio('./assets/left.mp3');
+        const SE_right = new Audio('./assets/right.mp3');
+        const BGM_SW = new Audio('./assets/STAR WARS theme.mp3');
+        const BGM_DV = new Audio('./assets/Darth Vader.mp3');
+
+
         //初期化
         window.onload = function () {
             //画像の読み込み
@@ -82,11 +93,13 @@
                     drawLandmarks(canvasCtx, landmarks, { color: '#000000', lineWidth: 1, radius: 2 });
                     cvFunction(landmarks, width, height);
                     drawLightSaber(); //自作関数
+                    // wakeSaber_SE();
                 }
             }
             canvasCtx.restore();
         }
-        //手の中心や傾きを計算  関節の点群データlandmarksは画像の各幅全体をを1と置き換えたパラメーターになっている。配列で０番目から20番目までの値が入っている
+
+        //手の中心や傾きを計算  関節の点群データlandmarksは画像の各幅全体を1と置き換えたパラメーターになっている。配列で０番目から20番目までの値が入っている
         function cvFunction(landmarks, width, height) {
             //手の関節を保持する配列
             let points = [];
@@ -119,7 +132,32 @@
             let up = 1.3;
             ratio = (Math.max(close, Math.min(up, ratio)) - close) / (up - close);//map(ratio,0.9,1.3,0,1,true);
 
+            //指の立ち具合によってライトセイバーの起動音を出す。
+            console.log(ratio);
+            if (ratio >= 0.5) {
+                wakeSaber_SE();
+                isStandingThumb = true;
+                thumbPos_x = landmarks[4].x;
+                thumbPos_y = landmarks[4].y;
+            } else if (ratio < 0.1) {  //閉じたらリセット
+                count = 0;
+                isStandingThumb = false;
+            }
+
+            //親指が立っている間に親指のxy座標を拾って、差分を取って速度を計算する
+            if (isStandingThumb) {
+                pastX = thumbPos_x;
+                pastY = thumbPos_y;
+
+                x = landmarks[4].x;
+                y = landmarks[4].y;
+                console.log(posThubs);
+            } else {
+                posThubs = [0, 0]
+            }
+            //親指が立っている状態の時、マイフレームの親指の位置を観測する
         }
+
         //ライトセイバーを表示
         function drawLightSaber() {  //画像、位置X、位置Y、横幅、縦幅
             //楕円の角度
@@ -133,16 +171,28 @@
             //角度指定
             canvasCtx.rotate(angle * Math.PI / 180.0); //openCVの角度は°でcanvasはラジアン
             //楕円を描画
-            canvasCtx.beginPath();  //複数の点をつなぐ線を書くよの宣言
-            canvasCtx.ellipse(0, 0, //位置 楕円そのものでは位置指定せず、全体のオブジェクトに対してtranslate()で指定する
+            canvasCtx.beginPath();    //複数の点をつなぐ線を書くよの宣言
+            canvasCtx.ellipse(0, 0,   //位置 楕円そのものでは位置指定せず、全体のオブジェクトに対してtranslate()で指定する
                 ell.size.width / 2.0, ell.size.height / 2.0,  //半径
-                0, 0, 2 * Math.PI); //角度と表示の開始・終了
+                0, 0, 2 * Math.PI);    //角度と表示の開始・終了
             canvasCtx.stroke();  //線で書くよ
             //デフォルトサイズに倍数をかける
             canvasCtx.scale(mul, mul);
             canvasCtx.drawImage(beam, -beam.width / 2.0, 0, beam.width, beam.height); //画像の位置をあらかじめx方向に半分ずらす
         }
 
+        // 効果音
+        //ライトセイバー起動時の一回のみ
+        function wakeSaber_SE() {
+            if (count == 0) {
+                console.log("SEスタート");
+                SE_wake.play();
+                count++;
+                console.log(count);
+            } else {
+            }
+            // SE_wake.pause();
+        }
     </script>
 </head>
 
@@ -152,7 +202,7 @@
     <!-- videoタグでアクセス Webカメラの映像を取得(不可視に設定) -->
     <video id="input_video" style="position:absolute; display:none;"></video>
     <!-- ライトセーバー的な画像(不可視に設定) display:none; -->
-    <img id="beam" src="beam.png" style="position:absolute; display:none; ">
+    <img id="beam" src="./assets/beam.png" style="position:absolute; display:none; ">
     <!-- カメラ画像とての認証結果を合成して表示 -->
     <canvas id="output_canvas" style="position:absolute;"></canvas>
 </body>
