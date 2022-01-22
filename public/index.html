@@ -29,11 +29,16 @@
         let deltaPos = 0;
         let flag_forLeaveSpace = 0;
         let rightOrLeft = 0;  //1ならright 2ならleft
-        const SE_wake = new Audio('./assets/wake.mp3');
-        const SE_left = new Audio('./assets/left.mp3');
-        const SE_right = new Audio('./assets/right.mp3');
-        const BGM_SW = new Audio('./assets/STAR WARS theme.mp3');
-        const BGM_DV = new Audio('./assets/Darth Vader.mp3');
+        const SE_wake = new Audio('wake.mp3');
+        const SE_left = new Audio('left.mp3');
+        const SE_right = new Audio('right.mp3');
+        const BGM_SW = new Audio('STAR WARS theme.mp3');
+        const BGM_DV = new Audio('Darth Vader.mp3');
+        // const SE_wake = new Audio('./assets/wake.mp3');
+        // const SE_left = new Audio('./assets/left.mp3');
+        // const SE_right = new Audio('./assets/right.mp3');
+        // const BGM_SW = new Audio('./assets/STAR WARS theme.mp3');
+        // const BGM_DV = new Audio('./assets/Darth Vader.mp3');
         let SE_flag = 0;
 
 
@@ -234,7 +239,7 @@
     <!-- videoタグでアクセス Webカメラの映像を取得(不可視に設定) -->
     <video id="input_video" style="position:absolute; display:none;"></video>
     <!-- ライトセーバー的な画像(不可視に設定) display:none; -->
-    <img id="beam" src="./assets/beam.png" style="position:absolute; display:none; ">
+    <img id="beam" src="beam.png" style="position:absolute; display:none; ">
     <!-- カメラ画像とての認証結果を合成して表示 -->
     <canvas id="output_canvas" style="position:absolute;"></canvas>
 </body>
