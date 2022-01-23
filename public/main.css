@@ -1,21 +1,28 @@
-        .ta-c {
-            text-align: center;
-            letter-spacing: 0.5em;
+        .body{
+            background-color:rgba(4, 0, 22, 0.93);
         }
-        
+
         .title{
+            display: flex;
+            justify-content: center;
+            /* justify-content:space-between; */
+            align-items: center;
+            margin-top:30px;
+            margin-bottom:30px;
+        }
+        .text{
+            color: azure;
+            font-size: 16pt;
+            font-family:Arial, Helvetica, sans-serif;
+            margin-right: 50px;
+            letter-spacing:3px;
+            margin-top: 16px;
+        }
+        .videos{
             display: flex;
             justify-content: center;
         }
 
-        .human {
-            position: absolute;
-            bottom: 16px;
-            right: 16px;
-            z-index: 10;
-            width: 140px;
-            height: 140px;
-        }
 
         .btn-group {
             display: flex;
@@ -23,6 +30,7 @@
             margin-top: 16px;
             opacity: 0;
             transition: 0.5s;
+            margin-left: 40px;
         }
 
         .btn-group.--visible {
