@@ -1,7 +1,8 @@
 //MediaPipeやOpenCVでの処理を記述
 let canvasElement;
 let canvasCtx;  //キャンバスコンテキストを使って絵を描く
-let beam; //ライトセーバー的案画像
+let beam; //ライトセーバー的案画像 ベイダー
+let beam_blue; //ライトセーバー的案画像 ルーク
 let ell; //手の位置や傾きを楕円
 let ratio;  //親指の立ち具合を
 let isStandingThumb = false;  //親指が立ち上がっているかどうかのフラグ
@@ -19,11 +20,14 @@ const SE_wake = new Audio('wake.mp3');
 const SE_left = new Audio('left.mp3');
 const SE_right = new Audio('right.mp3');
 let SE_flag = 0;
+// let playMode = 0;
+
 
 //初期化
 window.onload = function () {
     //画像の読み込み
     beam = document.getElementById('beam');
+    beam_blue = document.getElementById('beam_blue');
     //ビデオ要素の取得
     let videoElement = document.getElementById('input_video');
     //表示用のCanvasを取得
@@ -70,16 +74,16 @@ function recvResults(results) {
     }
     //以下canvasへの描画に関する記述 saveで始まりrestoreでおわる
     canvasCtx.save();
-    //(カメラで取得した)画像を表示
+    //(カメラで取得した)画像を表示  →消すと白いキャンバスにひたすら手の動きが描画されていく 
     canvasCtx.drawImage(results.image, 0, 0, width, height);
     //手を検出したならばtrue
     if (results.multiHandLandmarks) {
         //見つけた手の数だけ処理を繰り返す
         for (const landmarks of results.multiHandLandmarks) {
             //骨格を描画(MediaPipeのライブラリ)  コメントアウトすれば表示せずに済む
-            drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#040404', lineWidth: 1 });  //大きくすると線が太くなる
+            // drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#040404', lineWidth: 1 });  //大きくすると線が太くなる
             //関節を描画(MediaPipeのライブラリ)  コメントアウトすれば表示せずに済む
-            drawLandmarks(canvasCtx, landmarks, { color: '#000000', lineWidth: 1, radius: 2 });
+            // drawLandmarks(canvasCtx, landmarks, { color: '#000000', lineWidth: 1, radius: 2 });
             cvFunction(landmarks, width, height);
             drawLightSaber(); //自作関数
         }
@@ -121,16 +125,19 @@ function cvFunction(landmarks, width, height) {
     let up = 1.3;
     ratio = (Math.max(close, Math.min(up, ratio)) - close) / (up - close);//map(ratio,0.9,1.3,0,1,true);
 
-    //指の立ち具合によってライトセイバーの起動音を出す。
-    // console.log(ratio);
-    if (ratio >= 0.5) {
-        wakeSaber_SE();
-        isStandingThumb = true;
-        flag_forLeaveSpace++;
-        if (flag_forLeaveSpace == 10) thumb_deltaPos(landmarks[4]);
-    } else if (ratio < 0.2) {  //閉じたらリセット
-        SE_flag = 0;
-        isStandingThumb = false;
+    //モードに入っている時(どちらかのBGMが流れているときに)
+    if (nowPlaying_SW == true || nowPlaying_DV == true) {
+        //指の立ち具合によってライトセイバーの起動音を出す。
+        // console.log(ratio);
+        if (ratio >= 0.5) {
+            wakeSaber_SE();
+            isStandingThumb = true;
+            flag_forLeaveSpace++;
+            if (flag_forLeaveSpace == 10) thumb_deltaPos(landmarks[4]);
+        } else if (ratio < 0.2) {  //閉じたらリセット
+            SE_flag = 0;
+            isStandingThumb = false;
+        }
     }
 }
 
@@ -151,10 +158,14 @@ function drawLightSaber() {  //画像、位置X、位置Y、横幅、縦幅
     canvasCtx.ellipse(0, 0,   //位置 楕円そのものでは位置指定せず、全体のオブジェクトに対してtranslate()で指定する
         ell.size.width / 2.0, ell.size.height / 2.0,  //半径
         0, 0, 2 * Math.PI);    //角度と表示の開始・終了
-    canvasCtx.stroke();  //線で書くよ
+    // canvasCtx.stroke();  //線で書くよ
     //デフォルトサイズに倍数をかける
     canvasCtx.scale(mul, mul);
-    canvasCtx.drawImage(beam, -beam.width / 2.0, 0, beam.width, beam.height); //画像の位置をあらかじめx方向に半分ずらす
+    if (nowPlaying_DV) {
+        canvasCtx.drawImage(beam, -beam.width / 2.0, 0, beam.width, beam.height); //画像の位置をあらかじめx方向に半分ずらす
+    } else if (nowPlaying_SW) {
+        canvasCtx.drawImage(beam_blue, -beam_blue.width / 2.0, 0, beam_blue.width, beam_blue.height);
+    }
 }
 
 //ライトセイバー起動時の一回のみ効果音

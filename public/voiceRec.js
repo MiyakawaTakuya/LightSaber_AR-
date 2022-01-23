@@ -4,6 +4,11 @@ const BGM_SW = new Audio('STAR WARS theme.mp3');
 const BGM_DV = new Audio('Darth Vader.mp3');
 let nowPlaying_SW = false;
 let nowPlaying_DV = false;
+// class Mode{
+
+
+// }
+
 
 /** * サーバー通信を行う. */
 function api(url) {
@@ -67,8 +72,18 @@ function handleStartButtonClick() {
             }
             BGM_DV.play();
             nowPlaying_DV = true;
+        } else if (text.indexOf('ストップ') !== -1) {
+            if (nowPlaying_SW) {
+                BGM_SW.pause();
+                BGM_SW.currentTime = 0;
+                nowPlaying_SW = false;
+            } else if (nowPlaying_DV) {
+                BGM_DV.pause();
+                BGM_DV.currentTime = 0;
+                nowPlaying_DV = false;
+            }
         } else {
-            let synthes = new SpeechSynthesisUtterance('ごめんなさい、フォースに関することを叫んでください');
+            let synthes = new SpeechSynthesisUtterance('ごめんなさい、フォースの力を感じ取れませんでした');
             synthes.lang = "ja-JP";
             speechSynthesis.speak(synthes);
         }
@@ -91,7 +106,7 @@ function handleStopButtonClick() {
 function startIntro() {
     let elm = document.getElementById('text');
     return new Promise((resolve, reject) => {
-        let texts = "フォースと共に....！！".split('');
+        let texts = "フォースと共に...！！".split('');
         function showMessage(texts, cb) {
             if (texts.length === 0) {
                 return cb();

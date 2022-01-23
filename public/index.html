@@ -26,9 +26,9 @@
 
 <!-- 描画領域 -->
 
-<body>
+<body class="body">
     <div class="title">
-        <div id="text"></div>
+        <div id="text" class="text"></div>
         <div class="js-btn-group btn-group">
             <button id="startButton"
                 class="btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">Shout</button>
@@ -36,12 +36,15 @@
                 class="btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Stop</button>
         </div>
     </div>
-    <!-- videoタグでアクセス Webカメラの映像を取得(不可視に設定) -->
-    <video id="input_video" style="position:absolute; display:none;"></video>
-    <!-- ライトセーバー的な画像(不可視に設定) display:none; -->
-    <img id="beam" src="beam.png" style="position:absolute; display:none; ">
-    <!-- カメラ画像とての認証結果を合成して表示 -->
-    <canvas id="output_canvas" style="position:absolute;"></canvas>
+    <div class="videos">
+        <!-- videoタグでアクセス Webカメラの映像を取得(不可視に設定) -->
+        <video id="input_video" style="position:absolute; display:none;"></video>
+        <!-- ライトセーバー的な画像(不可視に設定) display:none; -->
+        <img id="beam" src="beam.png" style="position:absolute; display:none; ">
+        <img id="beam_blue" src="beam_blue.png" style="position:absolute; display:none; ">
+        <!-- カメラ画像とての認証結果を合成して表示 -->
+        <canvas id="output_canvas" style="position:absolute;"></canvas>
+    </div>
 </body>
 
 </html>
