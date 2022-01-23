@@ -1,0 +1,42 @@
+        .ta-c {
+            text-align: center;
+            letter-spacing: 0.5em;
+        }
+        
+        .title{
+            display: flex;
+            justify-content: center;
+        }
+
+        .human {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            z-index: 10;
+            width: 140px;
+            height: 140px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+            opacity: 0;
+            transition: 0.5s;
+        }
+
+        .btn-group.--visible {
+            opacity: 1;
+        }
+
+        .btn-group #stopButton {
+            display: none;
+        }
+
+        .btn-group.--recording #startButton {
+            display: none;
+        }
+
+        .btn-group.--recording #stopButton {
+            display: block;
+        }
