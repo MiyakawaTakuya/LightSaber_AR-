@@ -3,6 +3,7 @@ const BGM_SW = new Audio('STAR WARS theme.mp3');
 const BGM_DV = new Audio('Darth Vader.mp3');
 let nowPlaying_SW = false;
 let nowPlaying_DV = false;
+let nowPlaying_Goku = true;   //test用でtrueにする
 
 function bgmSWStartButtonClick() {
     if (nowPlaying_DV) {
