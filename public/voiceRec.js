@@ -4,10 +4,7 @@ const BGM_SW = new Audio('STAR WARS theme.mp3');
 const BGM_DV = new Audio('Darth Vader.mp3');
 let nowPlaying_SW = false;
 let nowPlaying_DV = false;
-// class Mode{
 
-
-// }
 
 
 /** * サーバー通信を行う. */
