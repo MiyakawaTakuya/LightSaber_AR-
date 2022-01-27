@@ -1,22 +1,57 @@
 /** * 音声認識のインスタンス. */
 const BGM_SW = new Audio('STAR WARS theme.mp3');
 const BGM_DV = new Audio('Darth Vader.mp3');
+const BGM_Goku = new Audio('chara.mp3');
 let nowPlaying_SW = false;
 let nowPlaying_DV = false;
-let nowPlaying_Goku = true;   //test用でtrueにする
+let nowPlaying_Goku = false;   //test用でtrueにする
 
 function bgmSWStartButtonClick() {
     if (nowPlaying_DV) {
         BGM_DV.pause();
         BGM_DV.currentTime = 0;
         nowPlaying_DV = false;
+    } else if (nowPlaying_Goku) {
+        BGM_Goku.pause();
+        BGM_Goku.currentTime = 0;
+        nowPlaying_Goku = false;
     }
     BGM_SW.volume = 0.4;
     BGM_SW.play();
     nowPlaying_SW = true;
     let elm = document.getElementById('text');
     return new Promise((resolve, reject) => {
-        let texts = "Luke Skywalker".split('');
+        let texts = "Luke Skywalker. Let's give it a thumbs up.".split('');
+        function showMessage(texts, cb) {
+            if (texts.length === 0) {
+                return cb();
+            }
+            let ch = texts.shift();
+            elm.innerHTML += ch;
+            setTimeout(() => {
+                showMessage(texts, cb);
+            }, 60);
+        }
+        elm.innerHTML = '';
+        showMessage(texts, resolve);
+    });
+}
+function bgmDVStartButtonClick() {
+    if (nowPlaying_SW) {
+        BGM_SW.pause();
+        BGM_SW.currentTime = 0;
+        nowPlaying_SW = false;
+    } else if (nowPlaying_Goku) {
+        BGM_Goku.pause();
+        BGM_Goku.currentTime = 0;
+        nowPlaying_Goku = false;
+    }
+    BGM_DV.volume = 0.4;
+    BGM_DV.play();
+    nowPlaying_DV = true;
+    let elm = document.getElementById('text');
+    return new Promise((resolve, reject) => {
+        let texts = "Darth Vader. Let's give it a thumbs up.".split('');
         function showMessage(texts, cb) {
             if (texts.length === 0) {
                 return cb();
@@ -33,18 +68,22 @@ function bgmSWStartButtonClick() {
 }
 
 
-function bgmDVStartButtonClick() {
+function bgmGokuStartButtonClick() {
     if (nowPlaying_SW) {
         BGM_SW.pause();
         BGM_SW.currentTime = 0;
         nowPlaying_SW = false;
+    } else if (nowPlaying_DV) {
+        BGM_DV.pause();
+        BGM_DV.currentTime = 0;
+        nowPlaying_DV = false;
     }
-    BGM_DV.volume = 0.4;
-    BGM_DV.play();
-    nowPlaying_DV = true;
+    BGM_Goku.volume = 0.4;
+    BGM_Goku.play();
+    nowPlaying_Goku = true;
     let elm = document.getElementById('text');
     return new Promise((resolve, reject) => {
-        let texts = "Darth Vader".split('');
+        let texts = "Son Goku. 'Let's pose Kamehame_ha'".split('');
         function showMessage(texts, cb) {
             if (texts.length === 0) {
                 return cb();
@@ -69,6 +108,10 @@ function bgmStopButtonClick() {
         BGM_SW.pause();
         BGM_SW.currentTime = 0;
         nowPlaying_SW = false;
+    } else if (nowPlaying_Goku) {
+        BGM_Goku.pause();
+        BGM_Goku.currentTime = 0;
+        nowPlaying_Goku = false;
     }
     let elm = document.getElementById('text');
     return new Promise((resolve, reject) => {
@@ -116,6 +159,7 @@ window.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.js-btn-group').classList.add('--visible');
         document.getElementById('SW_startButton').onclick = bgmSWStartButtonClick;
         document.getElementById('DV_startButton').onclick = bgmDVStartButtonClick;
+        document.getElementById('Goku_startButton').onclick = bgmGokuStartButtonClick;
         document.getElementById('stopButton').onclick = bgmStopButtonClick;
     });
 });
