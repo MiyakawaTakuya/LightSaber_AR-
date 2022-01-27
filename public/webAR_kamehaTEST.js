@@ -1,8 +1,11 @@
 //MediaPipeやOpenCVでの処理を記述
+let canvasElement;
+let canvasCtx;  //キャンバスコンテキストを使って絵を描く
 let kameha;
 let rect;
 let ell_rect;
 let ell_ratio;
+let SE_flag = 0;
 const SE_kameha = new Audio('kameha.mp3');
 
 //初期化
@@ -77,9 +80,9 @@ function recv2Results(results) {
         //見つけた手の数だけ処理を繰り返す
         for (const landmarks of results.multiHandLandmarks) {
             //骨格を描画(MediaPipeのライブラリ) コメントアウトすれば表示せずに済む
-            drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#040404', lineWidth: 1 });  //大きくすると線が太くなる
+            // drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, { color: '#040404', lineWidth: 1 });  //大きくすると線が太くなる
             //関節を描画(MediaPipeのライブラリ) コメントアウトすれば表示せずに済む
-            drawLandmarks(canvasCtx, landmarks, { color: '#000000', lineWidth: 1, radius: 2 });
+            // drawLandmarks(canvasCtx, landmarks, { color: '#000000', lineWidth: 1, radius: 2 });
         }
     }
     canvasCtx.restore();
@@ -154,9 +157,9 @@ function drawKamehameha() {  //画像、位置X、位置Y、横幅、縦幅
     // let angle = ell_rect.angle;
     let angle = ell_rect.angle + 90;
     //ライトセイバーの向きを反転 openCVは第２.３象限でしか角度判定できない 
-    // if (angle < 90) { angle = angle - 180; }
+    if (angle < 90) { angle = angle + 180; }
     //デフォルトサイズを元画像の２倍くらいにしたい  ratioをかけることで親指の立ち具合で大きさが変わるようになった
-    let mul = 1.3 * (ell_rect.size.width * 1.5) / kameha.width;
+    let mul = 3.0 * (ell_rect.size.width * 1.5) / kameha.width;
     //位置指定
     canvasCtx.translate(ell_rect.center.x, ell_rect.center.y);
     //角度指定
@@ -167,10 +170,10 @@ function drawKamehameha() {  //画像、位置X、位置Y、横幅、縦幅
         ell_rect.size.width / 2.0, ell_rect.size.height / 2.0,  //半径
         0, 90, 2 * Math.PI);    //角度と表示の開始・終了
     // ellipse(中心のx座標, 中心のy座標, x方向の半径, y方向の半径,傾き, 開始角度, 終了角度, [回転方向]);
-    canvasCtx.stroke();  //線で書くよ
+    // canvasCtx.stroke();  //線で書くよ
     //デフォルトサイズに倍数をかける
     canvasCtx.scale(mul, mul);
-    canvasCtx.drawImage(kameha, -kameha.width / 2.0, 0, kameha.width, kameha.height); //画像の位置をあらかじめx方向に半分ずらす
+    canvasCtx.drawImage(kameha, -kameha.width / 2.0, -kameha.width / 12.0, kameha.width, kameha.height); //画像の位置をあらかじめx方向に半分ずらす
 }
 
 //ライトセイバー起動時の一回のみ効果音
