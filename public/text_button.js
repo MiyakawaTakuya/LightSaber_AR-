@@ -21,7 +21,7 @@ function bgmSWStartButtonClick() {
     nowPlaying_SW = true;
     let elm = document.getElementById('text');
     return new Promise((resolve, reject) => {
-        let texts = "Luke Skywalker. Let's give it a thumbs up.".split('');
+        let texts = "Let's give it a thumbs up.".split('');
         function showMessage(texts, cb) {
             if (texts.length === 0) {
                 return cb();
@@ -51,7 +51,7 @@ function bgmDVStartButtonClick() {
     nowPlaying_DV = true;
     let elm = document.getElementById('text');
     return new Promise((resolve, reject) => {
-        let texts = "Darth Vader. Let's give it a thumbs up.".split('');
+        let texts = "Let's give it a thumbs up.".split('');
         function showMessage(texts, cb) {
             if (texts.length === 0) {
                 return cb();
@@ -64,8 +64,10 @@ function bgmDVStartButtonClick() {
         }
         elm.innerHTML = '';
         showMessage(texts, resolve);
+
     });
 }
+
 
 
 function bgmGokuStartButtonClick() {
@@ -83,7 +85,7 @@ function bgmGokuStartButtonClick() {
     nowPlaying_Goku = true;
     let elm = document.getElementById('text');
     return new Promise((resolve, reject) => {
-        let texts = "Son Goku. 'Let's pose Kamehame_ha'".split('');
+        let texts = "Let's pose Kamehame_ha".split('');
         function showMessage(texts, cb) {
             if (texts.length === 0) {
                 return cb();

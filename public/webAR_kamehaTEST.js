@@ -1,3 +1,6 @@
+//TODOこちらのファイルは未使用です 試験運転用で別ファイルとして作ってました。
+
+
 //MediaPipeやOpenCVでの処理を記述
 let canvasElement;
 let canvasCtx;  //キャンバスコンテキストを使って絵を描く

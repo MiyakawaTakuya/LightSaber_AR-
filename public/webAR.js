@@ -25,9 +25,7 @@ let kameha;
 const SE_kameha = new Audio('kameha.mp3');
 let ell_rect;
 let ell_ratio;
-
-
-
+let hands;
 
 //初期化
 window.onload = function () {
@@ -42,13 +40,13 @@ window.onload = function () {
     //Canvas描画に関する情報にアクセス
     canvasCtx = canvasElement.getContext('2d');
     //HandTrackingを使用するための関連ファイルの取得と初期化
-    const hands = new Hands({
+    hands = new Hands({
         locateFile: (file) => {
             return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
         }
     });
     //手の認識に関するオプション  //TODO:onloadは初回の一回しか動かない。Gokuに切り替わってもrecv2が永遠に回らないプログラムになってしまっている
-    if (nowPlaying_Goku == false) {
+    if (!nowPlaying_Goku) {
         hands.setOptions({
             selfieMode: true,  //画像を左右反転
             maxNumHands: 1, //認識可能な手の最大数
@@ -58,9 +56,9 @@ window.onload = function () {
             useCpuInference: false, //M1 MacのSafariの場合は1  crhomかfirefoxでやる
         });
         //結果を処理する関数を登録
-        console.log("setOptions");
+        console.log(hands);
         hands.onResults(recvResults);
-    } else if (nowPlaying_Goku == true) {  //悟空の時だけ２つの手を使うのでオプションを切り替える
+    } else if (nowPlaying_Goku) {  //悟空の時だけ２つの手を使うのでオプションを切り替える
         hands.setOptions({
             selfieMode: true,  //画像を左右反転
             maxNumHands: 2, //認識可能な手の最大数
@@ -112,6 +110,19 @@ function recvResults(results) {
         }
     }
     canvasCtx.restore();
+    if (nowPlaying_Goku) {
+        hands.setOptions({
+            selfieMode: true,  //画像を左右反転
+            maxNumHands: 2, //認識可能な手の最大数
+            modelComplexity: 1,//精度に関する設定(0~1)
+            minDetectionConfidence: 0.4,//手検出の信頼度 0〜1の値が帰ってきた時に幾つ以上の場合に手を判定するか
+            minTrackingConfidence: 0.3,//手追跡の信頼度
+            useCpuInference: false, //M1 MacのSafariの場合は1  crhomかfirefoxでやる
+        });
+        //結果を処理する関数を登録
+        console.log("setOptions_to_2");
+        hands.onResults(recv2Results);
+    }
 }
 
 //かめはめ波用
@@ -137,6 +148,19 @@ function recv2Results(results) {
         }
     }
     canvasCtx.restore();
+    if (!nowPlaying_Goku) {
+        hands.setOptions({
+            selfieMode: true,  //画像を左右反転
+            maxNumHands: 1, //認識可能な手の最大数
+            modelComplexity: 1,//精度に関する設定(0~1)
+            minDetectionConfidence: 0.4,//手検出の信頼度 0〜1の値が帰ってきた時に幾つ以上の場合に手を判定するか
+            minTrackingConfidence: 0.3,//手追跡の信頼度
+            useCpuInference: false, //M1 MacのSafariの場合は1  crhomかfirefoxでやる
+        });
+        //結果を処理する関数を登録
+        console.log("setOptions_to_1");
+        hands.onResults(recvResults);
+    }
 }
 
 
